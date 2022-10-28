@@ -1,0 +1,44 @@
+*neonews.txt*    Check for updates to :help news
+
+Help on using neonews.nvim                                            *neonews*
+
+                                       Type |gO| to see the table of contents.
+
+==============================================================================
+CONTENTS                                                     *neonews-contents*
+
+Concept                                                       |neonews-concept|
+Usage                                                           |neonews-usage|
+Functions                                                   |neonews-functions|
+Commands                                                     |neonews-commands|
+Configuration                                                  |neonews-config|
+
+==============================================================================
+CONCEPT                                                       *neonews-concept*
+
+Neonews is a lightweight plugin that allows you to stay up to date with the 
+latest changes to the Neovim project. It does this by fetching the latest news
+from `:help news' and displaying it in a split window. TODO: Add floating
+window option
+
+==============================================================================
+USAGE                                                           *neonews-usage*
+
+Neonews is designed to be as simple as possible to use. Simply run the
+`:NNewsRead` command and the latest news will be displayed in a split window.
+Additionally, `:NNewsCheck` can be used to check for updates to the news file
+either by comparing the last modified date of the local file to the time the 
+file, `news.txt`, was last opened or by comparing a hash of news.txt to the
+hash generated when the file, `news.txt` was last opened.
+
+For showing the news file whenever neovim is updated (regardless of whether
+the news file has been modified), use `{ unread_news_stragegy = "mtime" }` in
+your configuration.
+
+For showing the news file only when the contents of `news.txt` have been
+modified, use `{ unread_news_stragegy = "sha256" }` in your configuration.
+
+
+
+ vim:tw=78:ts=8:sw=2:et:ft=help:norl:
+
