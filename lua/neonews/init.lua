@@ -7,7 +7,7 @@ local defaults = {
 	datetime_format = "%Y-%m-%d %H:%M",
 	startup_message = false,
 	check_on_startup = true,
-	unread_news_strategy = "timestamp", -- or "sha256"
+	unread_news_strategy = "mtime", -- or "sha256"
 }
 function neonews.setup(opts)
 	neonews.config = (opts and vim.tbl_deep_extend("force", defaults, opts)) or defaults
@@ -18,7 +18,7 @@ function neonews.read_news()
 	local hash = fn.sha256(fn.join(fn.readfile(neonews.config.news_file)))
 	local now = fn.strftime("%s")
 	local result = fn.writefile({
-		"timestamp " .. now,
+		"mtime " .. now,
 		"sha256 " .. hash,
 	}, neonews.config.data_file)
 	if result ~= 0 then
@@ -39,13 +39,13 @@ function neonews.check_news(quiet)
 	local last_hash = fn.split(fn.readfile(cfg.data_file, "", 2)[2])[2]
 
 	if fn.filereadable(cfg.data_file) == 1 then
-		if cfg.unread_news_strategy == "timestamp" then
+		if cfg.unread_news_strategy == "mtime" then
 			local last_read_at = fn.split(fn.readfile(cfg.data_file, "", 1)[1])[2]
 			if last_read_at == nil or last_read_at < news_updated_at then
 				neonews.read_news()
 			else
 				if not quiet and (news_updated_at ~= nil) then
-					local last_read_friendly = vim.fn.strftime(cfg.datetime_format, last_read)
+					local last_read_friendly = vim.fn.strftime(cfg.datetime_format, last_read_at)
 					local news_updated_at_friendly = vim.fn.strftime(cfg.datetime_format, news_updated_at)
 					local message = "No new news since "
 						.. news_updated_at_friendly
