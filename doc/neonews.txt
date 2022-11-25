@@ -24,9 +24,9 @@ window option
 ==============================================================================
 USAGE                                                           *neonews-usage*
 
-Neonews is designed to be as simple as possible to use. Simply run the
-`:NNewsRead` command and the latest news will be displayed in a split window.
-Additionally, `:NNewsCheck` can be used to check for updates to the news file
+Neonews is designed to be simple to use. Running the
+`:NewsRead` command will display the latest release news.
+Additionally, `:NewsCheck` can be used to check for updates to the news file
 either by comparing the last modified date of the local file to the time the 
 file, `news.txt`, was last opened or by comparing a hash of news.txt to the
 hash generated when the file, `news.txt` was last opened.
@@ -40,6 +40,15 @@ modified, use `{ unread_news_stragegy = "sha256" }` in your configuration.
 
 ==============================================================================
 FUNCTIONS                                                   *neonews-functions*
+
+
+==============================================================================
+TODO
+
+- [ ] Document functions
+- [ ] Document commands
+- [ ] Document configuration
+- [ ] Add credit to reddit user who gave me the original idea
 
 
 

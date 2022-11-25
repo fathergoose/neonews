@@ -8,13 +8,66 @@ local defaults = {
 	startup_message = false,
 	check_on_startup = true,
 	unread_news_strategy = "mtime", -- or "sha256"
+	display = "float", -- "vsplit" or "split"
 }
 function neonews.setup(opts)
 	neonews.config = (opts and vim.tbl_deep_extend("force", defaults, opts)) or defaults
 end
 
+function neonews.draw_window()
+	if neonews.config.display == "split" then
+		vim.cmd("rightbelow split help news | exec '40wincmd|'")
+	elseif neonews.config.display == "vsplit" then
+		vim.cmd("rightbelow vert help news | exec '82wincmd|'")
+	elseif neonews.config.display == "float" then
+		local buf = vim.api.nvim_create_buf(false, true)
+		local width = vim.api.nvim_get_option("columns")
+		local height = vim.api.nvim_get_option("lines")
+
+		local win_height = math.ceil(height * 0.8 - 4)
+		local win_width = 82
+        print(win_width)
+
+		local row = math.ceil((height - win_height) / 2 - 1)
+		local col = math.ceil((width - win_width) / 2)
+		local win = vim.api.nvim_open_win(buf, true, {
+			relative = "editor",
+			height = win_height,
+			width = win_width,
+			row = row,
+			col = col,
+			style = "minimal",
+			border = "rounded",
+		})
+		vim.api.nvim_buf_set_option(buf, "buftype", "help")
+		vim.api.nvim_win_set_option(win, "foldmethod", "manual")
+		vim.api.nvim_buf_set_option(buf, "tabstop", 8)
+		vim.api.nvim_win_set_option(win, "arabic", false)
+		vim.api.nvim_buf_set_option(buf, "binary", false)
+		vim.api.nvim_buf_set_option(buf, "buflisted", false)
+		vim.api.nvim_win_set_option(win, "cursorbind", false) -- Local to window
+		vim.api.nvim_win_set_option(win, "diff", false)
+		vim.api.nvim_win_set_option(win, "foldenable", false)
+		vim.api.nvim_win_set_option(win, "list", false)
+		vim.api.nvim_buf_set_option(buf, "modifiable", true)
+		vim.api.nvim_win_set_option(win, "number", false)
+		vim.api.nvim_win_set_option(win, "relativenumber", false)
+		vim.api.nvim_win_set_option(win, "rightleft", false)
+		vim.api.nvim_win_set_option(win, "scrollbind", false)
+		vim.api.nvim_win_set_option(win, "spell", false)
+		vim.api.nvim_win_set_option(win, "scl", "yes:1")
+		vim.api.nvim_win_set_buf(win, buf)
+		vim.api.nvim_command("view" .. neonews.config.news_file)
+		vim.api.nvim_buf_set_option(buf, "modifiable", false)
+		vim.api.nvim_buf_set_option(buf, "filetype", "help")
+		vim.api.nvim_buf_set_option(buf, "syntax", "help")
+	else
+		error("Invalid display option: " .. neonews.config.display)
+	end
+end
+
 function neonews.read_news()
-	vim.cmd("rightbelow vert help news | exec '82wincmd|'")
+	neonews.draw_window()
 	local hash = fn.sha256(fn.join(fn.readfile(neonews.config.news_file)))
 	local now = fn.strftime("%s")
 	local result = fn.writefile({

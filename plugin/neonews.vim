@@ -8,11 +8,11 @@ if exists("g:loaded_neonews")
 endif
 let g:loaded_neonews = 1
 
-command! NNewsRead lua require'neonews'.read_news()
-command! NNewsMarkUnread lua require'neonews'.mark_news_unread()
+command! NewsRead lua require'neonews'.read_news()
+command! NewsMarkUnread lua require'neonews'.mark_news_unread()
 
 lua << EOF
-vim.api.nvim_create_user_command("NNewsCheck", function(params)
+vim.api.nvim_create_user_command("NewsCheck", function(params)
 	if (params.args == "false") or (params.args == "0") or (params.args == "quiet") or (params.args == "q") then
 		require("neonews").check_news(true)
 	else
